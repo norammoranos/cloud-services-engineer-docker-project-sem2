@@ -1,0 +1,72 @@
+name: momo-store-dev
+
+services:
+  backend:
+    profiles:
+      - dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: dev
+    image: ${MOMO_BACKEND_IMAGE:-docker-project-backend}:dev
+    restart: unless-stopped
+    ports:
+      - "${MOMO_DEV_API_PORT:-8082}:8081"
+    volumes:
+      - ./backend:/src:ro
+    networks:
+      - dev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
+    healthcheck:
+      test: ["CMD", "/bin/busybox", "wget", "-qO-", "http://127.0.0.1:8081/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 180s
+      retries: 5
+
+  frontend:
+    profiles:
+      - dev
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    image: ${MOMO_FRONTEND_IMAGE:-docker-project-frontend}:dev
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${MOMO_DEV_WEB_PORT:-3000}:3000"
+    environment:
+      VUE_APP_MOMO_API_PATH: ${MOMO_DEV_API_URL:-http://localhost:8082}
+      VUE_PUBLIC_PATH: /
+      NODE_OPTIONS: --openssl-legacy-provider
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+    networks:
+      - dev
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
+    healthcheck:
+      test: ["CMD", "/bin/busybox", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 30s
+      retries: 5
+
+networks:
+  dev:
+    driver: bridge
+
+volumes:
+  frontend-node-modules:

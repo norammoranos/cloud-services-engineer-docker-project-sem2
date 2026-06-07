@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+.vscode
+*.log
+Dockerfile
+docker-compose*.yml
+README.md
+coverage
+dist
+node_modules
+npm-debug.log*
+.cache
+.env
+.env.*
