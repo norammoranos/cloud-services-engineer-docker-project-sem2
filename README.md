@@ -53,25 +53,42 @@ docker compose -f docker-compose.dev.yml --profile dev up --build
 
 ## Переменные
 
-Основные значения по умолчанию:
+Образы:
 
-- `MOMO_BACKEND_IMAGE=docker-project-backend`
-- `MOMO_FRONTEND_IMAGE=docker-project-frontend`
-- `MOMO_PROXY_IMAGE=docker-project-backend-lb`
-- `MOMO_IMAGE_TAG=latest`
-- `MOMO_WEB_PORT=80`
-- `MOMO_API_PORT=8081`
-- `MOMO_WEB_API_PATH=/api`
-- `MOMO_WEB_PUBLIC_BASE=/`
-- `MOMO_BACKEND_CPUS=0.50`
-- `MOMO_BACKEND_MEMORY=128m`
-- `MOMO_PROXY_CPUS=0.25`
-- `MOMO_PROXY_MEMORY=64m`
-- `MOMO_WEB_CPUS=0.25`
-- `MOMO_WEB_MEMORY=64m`
-- `MOMO_DEV_WEB_PORT=3000`
-- `MOMO_DEV_API_PORT=8082`
-- `MOMO_DEV_API_URL=http://localhost:8082`
+| Переменная | По умолчанию | Для чего |
+| --- | --- | --- |
+| `MOMO_BACKEND_IMAGE` | `docker-project-backend` | имя образа backend |
+| `MOMO_FRONTEND_IMAGE` | `docker-project-frontend` | имя образа frontend |
+| `MOMO_PROXY_IMAGE` | `docker-project-backend-lb` | имя образа backend-балансировщика |
+| `MOMO_IMAGE_TAG` | `latest` | общий тег собираемых образов |
+
+Порты и frontend API:
+
+| Переменная | По умолчанию | Для чего |
+| --- | --- | --- |
+| `MOMO_WEB_PORT` | `80` | внешний порт frontend |
+| `MOMO_API_PORT` | `8081` | внешний порт backend API через балансировщик |
+| `MOMO_WEB_API_PATH` | `/api` | base URL для Axios в production-сборке frontend |
+| `MOMO_WEB_PUBLIC_BASE` | `/` | public path для собранной статики |
+
+Лимиты основного запуска:
+
+| Переменная | По умолчанию | Для чего |
+| --- | --- | --- |
+| `MOMO_BACKEND_CPUS` | `0.50` | CPU limit для backend |
+| `MOMO_BACKEND_MEMORY` | `128m` | memory limit для backend |
+| `MOMO_PROXY_CPUS` | `0.25` | CPU limit для backend-балансировщика |
+| `MOMO_PROXY_MEMORY` | `64m` | memory limit для backend-балансировщика |
+| `MOMO_WEB_CPUS` | `0.25` | CPU limit для frontend |
+| `MOMO_WEB_MEMORY` | `64m` | memory limit для frontend |
+
+Dev-режим:
+
+| Переменная | По умолчанию | Для чего |
+| --- | --- | --- |
+| `MOMO_DEV_WEB_PORT` | `3000` | внешний порт Vue dev server |
+| `MOMO_DEV_API_PORT` | `8082` | внешний порт backend в dev-режиме |
+| `MOMO_DEV_API_URL` | `http://localhost:8082` | API URL для dev frontend |
 
 `MOMO_WEB_API_PATH` передаётся во frontend на этапе сборки и используется как base URL для Axios. По умолчанию frontend ходит в API через `/api`, а nginx внутри frontend-контейнера проксирует эти запросы в `backend-lb`.
 
