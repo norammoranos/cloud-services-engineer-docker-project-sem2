@@ -70,7 +70,7 @@ jobs:
           load: true
           tags: docker-project-backend-lb:scan
       - name: Scan backend image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: docker-project-backend:scan
           format: table
@@ -79,7 +79,7 @@ jobs:
           ignore-unfixed: true
           exit-code: '1'
       - name: Scan backend load balancer image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: docker-project-backend-lb:scan
           format: table
@@ -88,7 +88,7 @@ jobs:
           ignore-unfixed: true
           exit-code: '1'
       - name: Scan frontend image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: docker-project-frontend:scan
           format: table
